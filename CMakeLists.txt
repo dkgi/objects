@@ -8,7 +8,7 @@ find_package(OpenGL)
 find_package(GLU)
 find_package(GLUT)
 
-add_executable(Objects Main.cpp Context.h Object.h Output.h Simulation.h Renderer.h)
+add_executable(Objects Main.cpp Context.h Object.h Output.h Simulation.h Renderer.h Vector.h Matrix.h)
 target_link_libraries(Objects ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${GLU_LIBRARIES})
 
 include_directories(${CMAKE_SOURCE_DIR})
