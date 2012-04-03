@@ -4,14 +4,6 @@
 namespace Objects
 {
 
-	std::ostream& operator<<(std::ostream& out, const std::vector<float>& v)
-	{
-		unsigned int i;
-		out << "[";
-		for (i = 0; i < v.size()-1; i++) out << v[i] << ", ";
-		return out << v[i] << "]";
-	}
-
 	std::ostream& operator<<(std::ostream& out, const Object &o)
 	{
 		return out << o.m << " @ " << o.x;
@@ -21,6 +13,7 @@ namespace Objects
 	{
 		return out << "[" << b.ll << "/" << b.ur << "]";
 	}
+
 
 }
 
