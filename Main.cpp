@@ -17,13 +17,12 @@ SimulationContext simulation;
 // TODO move into context
 // TODO up should be dynamic
 Vector camera(0.0, 0.0, -5.0); 
-Vector up(0.0, 1.0, 0.0);
 float speed = 5.0;
 
 void init()
 {
 	std::cout << std::fixed << std::setprecision(2);
-	glutWarpPointer(input.mouse.defaultPosition(0), input.mouse.defaultPosition(1));
+	glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
 
 void idle()
@@ -33,12 +32,13 @@ void idle()
 	simulation.then = simulation.now;
 
 	// Move camera
-	Vector dz = input.mouse.orientation * speed * simulation.dt;
-	Vector dx = input.mouse.orientation.cross(up) * speed * simulation.dt;
+	Vector dz = input.orientation.column(2) * speed * simulation.dt;
+	Vector dx = input.orientation.column(0) * speed * simulation.dt;
 	if (input.keyDown['s']) camera -= dz;
 	if (input.keyDown['w']) camera += dz;
-	if (input.keyDown['a']) camera -= dx;
-	if (input.keyDown['d']) camera += dx;
+	if (input.keyDown['d']) camera -= dx;
+	if (input.keyDown['a']) camera += dx;
+	
 
 	// Move simulation
 
@@ -53,10 +53,12 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Camera transformation
-	Vector at = camera + input.mouse.orientation;
+	Vector at = camera + input.orientation.column(2);
+	Vector up = input.orientation.column(1);
 	gluLookAt(camera(0), camera(1), camera(2), 
 			at(0), at(1), at(2),
 			up(0), up(1), up(2));
+			
 
 	// Render scene 
 	glutWireTeapot(1.0);
@@ -66,12 +68,12 @@ void display()
 
 void reshape(int w, int h)
 {
-	input.mouse.adjustReference(w, h);
+	input.reshape(w, h);
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0, (float)w/h, 0.1, 500);
-	glutWarpPointer(input.mouse.defaultPosition(0), input.mouse.defaultPosition(1));
+	glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -95,10 +97,9 @@ void keyboardUp(unsigned char key, int x, int y)
 
 void passiveMotion(int x, int y)
 {
-	input.mouse.passiveMotion(x, y);
-	glutWarpPointer(input.mouse.defaultPosition(0), input.mouse.defaultPosition(1));
+	input.passiveMotion(x, y);
+	glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
-
 
 int main(int argc, char *argv[])
 {

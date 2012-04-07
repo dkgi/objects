@@ -10,16 +10,17 @@ namespace Objects
 {
 
 
-	class MouseContext
+	class InputContext
 	{
 		public:
-			MouseContext()
+			InputContext()
 			:
 				position(250, 250),
 				defaultPosition(250, 250),
-				orientation(0, 0, 1),
+				orientation(Matrix::Identity()),
 				sensitivity(0.5),
-				ireference(1.0/250)
+				ireference(1.0/250),
+				keyDown(1 << (8*sizeof(unsigned char)), false)
 			{
 			}
 
@@ -29,33 +30,15 @@ namespace Objects
 				position += dm;
 
 				// Rotate orientation
-				float da = -dm(1) * ireference * M_PI/2.0 * sensitivity;
-				float db = dm(0) * ireference * M_PI/2.0 * sensitivity;
-				Matrix r = Matrix::Rotation(da, db, 0);
-				orientation = r*orientation;
+				float da = dm(1) * ireference * M_PI/2.0 * sensitivity;
+				float db = -dm(0) * ireference * M_PI/2.0 * sensitivity;
+				angles += Vector(da, db, 0);
+				orientation = Matrix::Rotation(angles(0), angles(1), angles(2));
 			}
 
-			void adjustReference(int w, int h)
+			void reshape(int w, int h)
 			{
 				ireference = 1.0 / std::min(w, h);
-			}
-
-			Point position;
-			Point defaultPosition;
-			Vector orientation;
-			float sensitivity;
-			float ireference;
-
-	};
-
-
-	class InputContext
-	{
-		public:
-			InputContext()
-			:
-				keyDown(1 << (8*sizeof(unsigned char)), false)
-			{
 			}
 
 			void keyboard(unsigned char key, int x, int y)
@@ -68,14 +51,20 @@ namespace Objects
 				keyDown[key] = false;
 			}
 
+			Point position;
+			Point defaultPosition;
+			Vector angles;
+			Matrix orientation;
+			float sensitivity;
+			float ireference;
 			std::vector<bool> keyDown;
-			MouseContext mouse;
+
 	};
+
 	
 	std::ostream& operator<<(std::ostream& out, const InputContext &ic)
 	{
-		out << "Ref: " << ic.mouse.ireference<< "\n";
-		return out << "Mouse: " << ic.mouse.position << ", " << ic.mouse.orientation;
+		return out;
 	}
 
 

@@ -29,17 +29,19 @@ namespace Objects
 				init(v);
 			}
 
-			Vector3(const Vector3<T> &v)
+			/*
+			explicit Vector3(const Vector3<T> &v)
 			{
 				init(v.x);
 			}
+			*/
 
-			Vector3(T v[3])
+			explicit Vector3(T v[3])
 			{
 				init(v);
 			}
 
-			T& operator()(unsigned int i)
+			T operator()(unsigned int i) const
 			{
 				assert(0 <= i && i < 3);
 				return x[i];
@@ -60,12 +62,12 @@ namespace Objects
 				x[0] *= f; x[1] *= f; x[2] *= f;
 			}
 
-			Vector3<T> operator+(Vector3<T> &v) const
+			Vector3<T> operator+(const Vector3<T> &v) const
 			{
 				return Vector3<T>(x[0]+v(0), x[1]+v(1), x[2]+v(2));
 			}
 
-			void operator+=(Vector3<T> &v)
+			void operator+=(const Vector3<T> &v)
 			{
 				x[0] += v(0); x[1] += v(1); x[2] += v(2);
 			}
@@ -80,7 +82,7 @@ namespace Objects
 				x[0] -= v(0); x[1] -= v(1); x[2] -= v(2);
 			}
 
-			Vector3<T> cross(Vector3<T> &v) const
+			Vector3<T> cross(const Vector3<T> &v) const
 			{
 				return Vector3<T>(x[1]*v(2)-v(1)*x[2], x[2]*v(0)-v(2)*x[0], x[0]*v(1)-v(0)*x[1]);
 			}

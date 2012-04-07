@@ -16,18 +16,17 @@ namespace Objects
 		public:
 			Matrix3()
 			{
-				T v[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-				init(v);
+				zero(x);
 			}
 
-			Matrix3(T v[3][3])
+			explicit Matrix3(T v[3][3])
 			{
-				init(v);
+				copy(v, x);
 			}
 
 			static Matrix3<T> Identity()
 			{
-				T v[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+				T v[3][3]; one(v);
 				return Matrix3<T>(v);
 			}
 
@@ -45,42 +44,17 @@ namespace Objects
 				return Matrix3<T>(v);
 			}
 
-			/*
-			static Matrix3<T> Rotation(unsigned int axis, T alpha)
-			{
-				assert(0 <= axis && axis < 3);
-				T c = cos(alpha); T s = sin(alpha);
-				T v[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-				
-				switch(axis) {
-					case 0:
-						v[1][1] = c; v[1][2] = -s;
-						v[2][1] = s; v[2][2] = c;
-						break;
-					case 1:
-						v[0][0] = c; v[0][2] = s;
-						v[2][0] = -s; v[2][2] = c;
-						break;
-					case 2:
-						v[0][0] = c; v[0][1] = -s;
-						v[1][0] = s; v[1][2] = c;
-						break;
-				}
-
-				return Matrix3<T>(v);
-			}
-			*/
-
-			T& operator()(unsigned int i, unsigned int j)
+			T operator()(unsigned int i, unsigned int j) const
 			{
 				assert(0 <= i && i < 3);
 				assert(0 <= j && j < 3);
 				return x[i][j];
 			}
 
-			Matrix3<T> operator*(Matrix3<T>& m)
+			Matrix3<T> operator*(const Matrix3<T>& m) const
 			{
-				T r[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+				T r[3][3]; zero(r);
+
 				for (int k = 0; k < 3; k++) {
 					for (int i = 0; i < 3; i++) {
 						for (int j = 0; j < 3; j++) {
@@ -88,75 +62,102 @@ namespace Objects
 						}
 					}
 				}
+
 				return Matrix3<T>(r);
 			}
 
-			Vector3<T> operator*(Vector3<T>& v)
+			Vector3<T> operator*(const Vector3<T>& v) const
 			{
 				T r[3] = {0, 0, 0};
+
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
 						r[i] += x[i][j]*v(j);
 					}
 				}
+
 				return Vector3<T>(r);
 			}
 
-			Matrix3<T> operator*(T f)
+			Matrix3<T> operator*(T f) const
 			{
 				T v[3][3];
+
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
 						v[i][j] = f*x[i][j];
 					}
 				}
+
 				return Matrix3<T>(v);
 			}
 
-			Matrix3<T> transposed()
+			Matrix3<T> transposed() const
 			{
 				T v[3][3];
+
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
 						v[i][j] = x[j][i];
 					}
 				}
+
 				return Matrix3<T>(v);
 			}
 
-			Matrix3<T> inverse()
+			Matrix3<T> inverse() const
 			{
 				T d = determinant();
-				if (d == 0) std::cerr << "Warning: Matrix << " (*this) << " is singular" << std::endl;
+				if (d == 0) std::cerr << "Warning: Matrix " << (*this) << " is singular" << std::endl;
 				return transposed() * (1.0 / d);
 			}
 
-			T determinant()
+			T determinant() const
 			{
 				return x[0][0]*(x[1][1]*x[2][2]-x[1][2]*x[2][1]) -
 					x[0][1]*(x[1][0]*x[2][2]-x[1][2]*x[2][0]) +
 					x[0][2]*(x[1][0]*x[2][1]-x[1][1]*x[2][0]);
 			}
 
-		
+			Vector3<T> column(unsigned int i)
+			{
+				assert(0 <= i && i <= 3);
+				return Vector3<T>(x[i]);
+			}
+
 		private:
-			void init(T v[3][3])
+			static void copy(T v[3][3], T u[3][3]) 
 			{
 				for(int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
-						x[i][j] = v[i][j];
+						u[i][j] = v[i][j];
 					}
 				}
 			}
 
+			static void zero(T v[3][3])
+			{
+				for(int i = 0; i < 3; i++) {
+					for (int j = 0; j < 3; j++) {
+						v[i][j] = 0;
+					}
+				}
+			}
+
+			static void one(T v[3][3]) 
+			{
+				zero(v);
+				v[0][0] = v[1][1] = v[2][2] = 1;
+			}
 
 			T x[3][3];
+
 	};
 
 	typedef Matrix3<float> Matrix;
 
 	template<class T>
-	std::ostream& operator<<(std::ostream& out, Matrix3<T> &m)
+	std::ostream& operator<<(std::ostream& out, const Matrix3<T> &m)
 	{
 		out << "[";
 		for (int i = 0; i < 2; i++) {
@@ -168,7 +169,7 @@ namespace Objects
 	}
 
 	template<class T>
-	Matrix3<T> operator*(T f, Matrix3<T> m)
+	Matrix3<T> operator*(T f, const Matrix3<T> m)
 	{
 		return m*f;
 	}
