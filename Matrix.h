@@ -16,12 +16,12 @@ namespace Objects
 		public:
 			Matrix3()
 			{
-				zero(x);
+				zero(m_x);
 			}
 
 			explicit Matrix3(T v[3][3])
 			{
-				copy(v, x);
+				copy(v, m_x);
 			}
 
 			static Matrix3<T> Identity()
@@ -51,7 +51,7 @@ namespace Objects
 			{
 				assert(0 <= i && i < 3);
 				assert(0 <= j && j < 3);
-				return x[i][j];
+				return m_x[i][j];
 			}
 
 			Matrix3<T> operator*(const Matrix3<T>& m) const
@@ -61,7 +61,7 @@ namespace Objects
 				for (int k = 0; k < 3; k++) {
 					for (int i = 0; i < 3; i++) {
 						for (int j = 0; j < 3; j++) {
-							r[i][j] += x[i][k]*m(k,j);
+							r[i][j] += m_x[i][k]*m(k,j);
 						}
 					}
 				}
@@ -75,7 +75,7 @@ namespace Objects
 
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
-						r[i] += x[i][j]*v(j);
+						r[i] += m_x[i][j]*v(j);
 					}
 				}
 
@@ -88,7 +88,7 @@ namespace Objects
 
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
-						v[i][j] = f*x[i][j];
+						v[i][j] = f*m_x[i][j];
 					}
 				}
 
@@ -101,7 +101,7 @@ namespace Objects
 
 				for (int i = 0; i < 3; i++) {
 					for (int j = 0; j < 3; j++) {
-						v[i][j] = x[j][i];
+						v[i][j] = m_x[j][i];
 					}
 				}
 
@@ -117,15 +117,15 @@ namespace Objects
 
 			T determinant() const
 			{
-				return x[0][0]*(x[1][1]*x[2][2]-x[1][2]*x[2][1]) -
-					x[0][1]*(x[1][0]*x[2][2]-x[1][2]*x[2][0]) +
-					x[0][2]*(x[1][0]*x[2][1]-x[1][1]*x[2][0]);
+				return m_x[0][0]*(m_x[1][1]*m_x[2][2]-m_x[1][2]*m_x[2][1]) -
+					m_x[0][1]*(m_x[1][0]*m_x[2][2]-m_x[1][2]*m_x[2][0]) +
+					m_x[0][2]*(m_x[1][0]*m_x[2][1]-m_x[1][1]*m_x[2][0]);
 			}
 
 			Vector3<T> column(unsigned int i)
 			{
 				assert(0 <= i && i <= 3);
-				return Vector3<T>(x[i]);
+				return Vector3<T>(m_x[i]);
 			}
 
 		private:
@@ -153,7 +153,7 @@ namespace Objects
 				v[0][0] = v[1][1] = v[2][2] = 1;
 			}
 
-			T x[3][3];
+			T m_x[3][3];
 
 	};
 

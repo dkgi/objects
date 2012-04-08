@@ -44,63 +44,63 @@ namespace Objects
 			T operator()(unsigned int i) const
 			{
 				assert(0 <= i && i < 3);
-				return x[i];
+				return m_x[i];
 			}
 
 			T operator*(const Vector3<T> &v) const
 			{
-				return x[0]*v(0) + x[1]*v(1) + x[2]*v(2);
+				return m_x[0]*v(0) + m_x[1]*v(1) + m_x[2]*v(2);
 			}
 
 			Vector3<T> operator*(T f) const
 			{
-				return Vector3<T>(f*x[0], f*x[1], f*x[2]);
+				return Vector3<T>(f*m_x[0], f*m_x[1], f*m_x[2]);
 			}
 
 			void operator*=(T f)
 			{
-				x[0] *= f; x[1] *= f; x[2] *= f;
+				m_x[0] *= f; m_x[1] *= f; m_x[2] *= f;
 			}
 
 			Vector3<T> operator+(const Vector3<T> &v) const
 			{
-				return Vector3<T>(x[0]+v(0), x[1]+v(1), x[2]+v(2));
+				return Vector3<T>(m_x[0]+v(0), m_x[1]+v(1), m_x[2]+v(2));
 			}
 
 			void operator+=(const Vector3<T> &v)
 			{
-				x[0] += v(0); x[1] += v(1); x[2] += v(2);
+				m_x[0] += v(0); m_x[1] += v(1); m_x[2] += v(2);
 			}
 
 			Vector3<T> operator-(Vector3<T> &v) const
 			{
-				return Vector3<T>(x[0]-v(0), x[1]-v(1), x[2]-v(2));
+				return Vector3<T>(m_x[0]-v(0), m_x[1]-v(1), m_x[2]-v(2));
 			}
 
 			void operator-=(Vector3<T> &v)
 			{
-				x[0] -= v(0); x[1] -= v(1); x[2] -= v(2);
+				m_x[0] -= v(0); m_x[1] -= v(1); m_x[2] -= v(2);
 			}
 
 			Vector3<T> cross(const Vector3<T> &v) const
 			{
-				return Vector3<T>(x[1]*v(2)-v(1)*x[2], x[2]*v(0)-v(2)*x[0], x[0]*v(1)-v(0)*x[1]);
+				return Vector3<T>(m_x[1]*v(2)-v(1)*m_x[2], m_x[2]*v(0)-v(2)*m_x[0], m_x[0]*v(1)-v(0)*m_x[1]);
 			}
 
 			T squaredLength() const
 			{
-				return x[0]*x[0] + x[1]*x[1] + x[2]*x[2]; 	
+				return m_x[0]*m_x[0] + m_x[1]*m_x[1] + m_x[2]*m_x[2]; 	
 			}
 
 		private:
 			void init(const T v[3])
 			{
 				for (int i = 0; i < 3; i++) {
-					x[i] = v[i];
+					m_x[i] = v[i];
 				}
 			}
 
-			T x[3];
+			T m_x[3];
 	};
 
 	typedef Vector3<int> Point;

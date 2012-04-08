@@ -27,12 +27,12 @@ namespace Objects
 
 			const std::vector<Object*>& getObjects()
 			{
-				return objects;
+				return m_objects;
 			}
 
 		private:
-			std::vector<Object*> objects;
-			std::vector<Vector*> forces;
+			std::vector<Object*> m_objects;
+			std::vector<Vector*> m_forces;
 
 	};
 
