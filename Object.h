@@ -1,8 +1,9 @@
 #ifndef __OBJECTS_OBJECT_H
 #define __OBJECTS_OBJECT_H
 
-#include <vector>
 #include <iostream>
+
+#include "Vector.h"
 
 namespace Objects
 {
@@ -11,12 +12,9 @@ namespace Objects
 	{
 		public:
 			Box()
-			:
-				ll(3, 0.0),
-				ur(3, 0.0)
 			{}
 
-			std::vector<float> ll, ur;
+			Vector ll, ur;
 	};
 
 	class Object
@@ -24,14 +22,11 @@ namespace Objects
 		public:
 			Object()
 			:
-				m(0.0), 
-				x(3, 0.0),
-				F(3, 0.0)
+				m(0.0)
 			{}
 
 			float m;
-			std::vector<float> x;
-			std::vector<float> F;
+			Vector x, v, F;
 
 			Box bb;
 	};

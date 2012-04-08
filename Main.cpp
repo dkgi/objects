@@ -9,40 +9,39 @@
 #include "Context.h"
 #include "Vector.h"
 
+#include "Simulation.h"
+#include "Renderer.h"
+#include "Camera.h"
+
 using namespace Objects;
 
 InputContext input;
-SimulationContext simulation;
+TimingContext timing;
 
-// TODO move into context
-// TODO up should be dynamic
-Vector camera(0.0, 0.0, -5.0); 
-float speed = 5.0;
+Camera *camera = new Camera();
+Simulation *simulation = new Simulation();
+Renderer *renderer = new Renderer();
 
 void init()
 {
 	std::cout << std::fixed << std::setprecision(2);
 	glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 }
 
 void idle()
 {
-	simulation.now = glutGet(GLUT_ELAPSED_TIME);
-	simulation.dt = (simulation.now - simulation.then) / 1000.0f;
-	simulation.then = simulation.now;
+	timing.now = glutGet(GLUT_ELAPSED_TIME);
+	timing.dt = (timing.now - timing.then) / 1000.0f;
+	timing.t += timing.dt;
+	timing.then = timing.now;
 
-	// Move camera
-	Vector dz = input.orientation.column(2) * speed * simulation.dt;
-	Vector dx = input.orientation.column(0) * speed * simulation.dt;
-	if (input.keyDown['s']) camera -= dz;
-	if (input.keyDown['w']) camera += dz;
-	if (input.keyDown['d']) camera -= dx;
-	if (input.keyDown['a']) camera += dx;
-	
+	camera->step(timing, input);
+	simulation->step(timing);
 
-	// Move simulation
-
-	// Redisplay
 	glutPostRedisplay();
 }
 
@@ -50,25 +49,25 @@ void display()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Camera transformation
-	Vector at = camera + input.orientation.column(2);
-	Vector up = input.orientation.column(1);
-	gluLookAt(camera(0), camera(1), camera(2), 
+	Vector pos = camera->position();
+	Vector at = camera->at();
+	Vector up = camera->up();
+	gluLookAt(pos(0), pos(1), pos(2), 
 			at(0), at(1), at(2),
 			up(0), up(1), up(2));
-			
 
 	// Render scene 
-	glutWireTeapot(1.0);
+	renderer->render(*simulation);
 
 	glutSwapBuffers();
 }
 
 void reshape(int w, int h)
 {
-	input.reshape(w, h);
+	camera->reshape(w, h);
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -78,7 +77,7 @@ void reshape(int w, int h)
 
 void keyboard(unsigned char key, int x, int y)
 {
-	input.keyboard(key, x, y);
+	input.keyDown[key] = true;
 
 	switch(key) {
 		case 'q':
@@ -92,12 +91,14 @@ void keyboard(unsigned char key, int x, int y)
 
 void keyboardUp(unsigned char key, int x, int y)
 {
-	input.keyboardUp(key, x, y);
+	input.keyDown[key] = false;
 }
 
 void passiveMotion(int x, int y)
 {
-	input.passiveMotion(x, y);
+	input.dx = Point(x, y) - input.defaultPosition;
+	input.position += input.dx;
+	camera->mouseMotion(input);
 	glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
 

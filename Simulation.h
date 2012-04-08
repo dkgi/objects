@@ -1,17 +1,38 @@
 #ifndef __OBJECTS_SIMULATION_H
 #define __OBJECTS_SIMULATION_H
 
+#include <vector>
+#include <algorithm>
+
+#include "Context.h"
+#include "Object.h"
+
 namespace Objects
 {
 
 	class Simulation
 	{
-		
-		template<class InputIterator>
-		void step(InputIterator first, InputIterator last, float dt)
-		{
+		public:
+			Simulation()
+			{
+			}
 
-		}
+			~Simulation()
+			{
+			}
+
+			void step(const TimingContext &timing)
+			{
+			}
+
+			const std::vector<Object*>& getObjects()
+			{
+				return objects;
+			}
+
+		private:
+			std::vector<Object*> objects;
+			std::vector<Vector*> forces;
 
 	};
 

@@ -2,12 +2,20 @@
 #define __OBJECTS_RENDERER_H
 
 #include <GL/gl.h>
+#include <GL/glut.h>
+#include "Simulation.h"
 
 namespace Objects
 {
 
 	class Renderer
 	{
+
+		public:
+			void render(const Simulation &simulation)
+			{
+				glutSolidCube(1.0);
+			}
 
 		template<class InputIterator>
 		void renderWireframes(InputIterator first, InputIterator last)

@@ -30,6 +30,9 @@ namespace Objects
 				return Matrix3<T>(v);
 			}
 
+			/**
+			  * Euler rotation with rx(a)*ry(b)*rz(g)
+			  */
 			static Matrix3<T> Rotation(T a, T b, T g)
 			{
 				T ca = cos(a); T sa = sin(a);
@@ -37,9 +40,9 @@ namespace Objects
 				T cg = cos(g); T sg = sin(g);
 
 				T v[3][3] = {
-					{cb*cg, ca*sg+sa*sb*cg, sa*sg-ca*sb*cg},
-					{-cb*sg, ca*cg-sa*sb*sg, sa*cg+ca*sb*sg},
-					{sb, -sa*cb, ca*cb}
+					{cb*cg, -cb*sg, sb},
+					{sa*sb*cg+ca*sg, -sa*sb*sg+ca*cg, -sa*cb},
+					{-ca*sb*cg+sa*sg, ca*sb*sg+sa*cg, ca*cb}
 				};
 				return Matrix3<T>(v);
 			}
