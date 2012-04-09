@@ -4,34 +4,42 @@
 #include <iostream>
 
 #include "Vector.h"
+#include "Mesh.h"
 
 namespace Objects
 {
 
-	class Box
-	{
-		public:
-			Box()
-			{}
-
-			Vector ll, ur;
-	};
-
 	class Object
 	{
 		public:
-			Object()
-			:
-				m(0.0)
-			{}
+			Object(float m)
+			{
+				m_m = m;
+			}
 
-			float m;
-			Vector x, v, F;
+			~Object()
+			{
+				if (m_shape != NULL) delete m_shape;
+			}
 
-			Box bb;
+			void applyForce(const Vector &f)
+			{
+				m_F += f;
+			}
+
+			void step(const TimingContext &timing)
+			{
+				Vector a = m_F / m_m;
+				m_v += timing.dt * a;
+				m_x += timing.dt * m_v;
+			}
+
+		protected:
+			float m_m;
+			Vector m_x, m_v, m_F;
+
+			Mesh *m_shape;
 	};
-
-
 
 }
 

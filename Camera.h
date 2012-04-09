@@ -43,20 +43,11 @@ namespace Objects
 				m_isize = 1.0 / std::min(w, h);
 			}
 
-			Vector position()
-			{
-				return m_position;
-			}
+			Vector position() { return m_position; }
 
-			Vector at()
-			{
-				return m_position + m_orientation.column(2);
-			}
+			Vector at() { return m_position + m_orientation.column(2); }
 
-			Vector up()
-			{
-				return m_orientation.column(1);
-			}
+			Vector up() { return m_orientation.column(1); }
 
 
 		protected:
