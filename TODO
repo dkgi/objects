@@ -1,4 +1,5 @@
-1. Comment code
 1. Parse obj and scene file
-1. Refactoring according to http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
+2. Circular camera
+2. Comment code
+2. Debug overlay information
 2. Readme

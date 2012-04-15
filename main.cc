@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <vector>
 #include <cassert>
+#include <sstream>
 
 #include "context.h"
 #include "vector.h"
@@ -13,6 +14,7 @@
 #include "simulation.h"
 #include "renderer.h"
 #include "camera.h"
+#include "mesh.h"
 
 objects::InputContext input;
 objects::TimingContext timing;
@@ -29,6 +31,9 @@ void Init() {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
+
+  objects::MeshParser meshes;
+  meshes.Parse("meshes/cone.obj", "cone");
 }
 
 // Computes time since last invocation, then advances both camera and the

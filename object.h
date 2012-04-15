@@ -20,7 +20,7 @@ class Object {
 
   // Cleans up.
   ~Object() {
-    if (shape_ != NULL) delete shape_;
+    if (mesh_ != NULL) delete mesh_;
   }
 
   // Applies a force represented by a vector to the object.
@@ -40,7 +40,7 @@ class Object {
   float m_;                 // Mass of the object.
   Vector x_, v_, F_;        // Position, velocity and applied force.
 
-  Mesh *shape_;             // The objects shape.
+  Mesh *mesh_;             // The objects mesh.
 };
 
 }
