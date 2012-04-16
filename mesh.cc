@@ -8,56 +8,37 @@
 
 namespace objects {
 
-Box::Box(const Box &b) : ll_(b.ll_), ur_(b.ur_) {}
-
-Box::Box(Vector ll, Vector ur) : ll_(ll), ur_(ur) {}
-
-void Box::operator=(const Box &b) {
-  ll_ = b.ll_; ur_ = b.ur_;
-}
-
-bool Box::Intersects(const Box &box) const {
-  return (box.ll() <= ll_ && ll_ <= box.ur()) ||
-    (box.ur() <= ur_ && ur_ <= box.ur());
-}
-  
-const Vector& Box::ll() const { 
-  return ll_; 
-}
-
-const Vector& Box::ur() const { 
-  return ur_; 
-}
-
 Mesh::Mesh(const std::vector<Vector> &vertices, 
      const std::vector<Vector> &normals,
      const std::vector<Vector> &texture_coordinates, 
      const std::vector<std::vector<std::vector<int> > > &faces, 
      const Box &box) 
-  : vertices_(vertices),
-    normals_(normals),
-    texture_coordinates_(texture_coordinates),
-    faces_(faces),
-    box_(box) {}
+    : Shape(box),
+      vertices_(vertices),
+      normals_(normals),
+      texture_coordinates_(texture_coordinates),
+      faces_(faces) {}
 
-bool Mesh::Intersects(const Mesh &mesh) const {
-  if (box_.Intersects(mesh.box())) {
-    return true;
-  }
-  return false;
+void Mesh::Render(const Renderer &renderer) const {
+  std:: cout << "render mesh";
 }
 
 const std::vector<Vector>& Mesh::vertices() const { 
   return vertices_; 
 }
   
+const std::vector<Vector>& Mesh::normals() const { 
+  return normals_; 
+}
+  
+const std::vector<Vector>& Mesh::texture_coordinates() const { 
+  return texture_coordinates_; 
+}
+  
 const std::vector<std::vector<std::vector<int> > >& Mesh::faces() const { 
   return faces_; 
 }
 
-const Box& Mesh::box() const {
-  return box_;
-}
 
 MeshParser::~MeshParser() {
   for (auto mp : meshes_) delete mp.second;

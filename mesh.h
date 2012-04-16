@@ -8,40 +8,14 @@
 
 #include "config.h"
 #include "vector.h"
+#include "shape.h"
+#include "renderer.h"
 
 namespace objects {
 
-
-// The Box class represents an axis aligned bounding box defined by two
-// vertices; the lower left (ll) and the upper right (ur) corner.
-class Box {
- public:
-  // Constructs a box with the same corners as the argument.
-  explicit Box(const Box &b);
-
-  // Constructs a box out of the two corner vectors.
-  Box(Vector ll, Vector ur);
-
-  // Copies the contents of the argument box.
-  void operator=(const Box &b);
-
-  // Tests if the box intersects another box.
-  bool Intersects(const Box &box) const;
-
-  // Returns the lower left corner.
-  const Vector& ll() const;
-
-  // Returns the upper right corner.
-  const Vector& ur() const;
-
-private:
-  Vector ll_, ur_;      // The two corner vertices
-};
-
-
 // The Mesh class represents a mesh consisting of vertices, normals, texture
 // coordinates and faces relating vertices.
-class Mesh {
+class Mesh : public Shape {
  public:
   // Constructs a new mesh from vertices, normals, texture coordinates, faces
   // and a bounding box.
@@ -51,24 +25,26 @@ class Mesh {
        const std::vector<std::vector<std::vector<int> > > &faces, 
        const Box &box);
 
-  // Tests if two meshes intersect.
-  bool Intersects(const Mesh &shape) const;
+  // Renders the mesh.
+  void Render(const Renderer &renderer) const;
 
   // Returns the vertices.
   const std::vector<Vector>& vertices() const;
 
+  // Returns the normals.
+  const std::vector<Vector>& normals() const;
+
+  // Returns the texture coordinates.
+  const std::vector<Vector>& texture_coordinates() const;
+
   // Returns the faces.
   const std::vector<std::vector<std::vector<int> > >& faces() const;
-
-  // Returns the bounding box.
-  const Box& box() const;
 
 private:
   std::vector<Vector> vertices_;
   std::vector<Vector> normals_;
   std::vector<Vector> texture_coordinates_;
   std::vector<std::vector<std::vector<int> > > faces_;
-  Box box_;
 
   DISALLOW_COPY_AND_ASSIGN(Mesh);
 };

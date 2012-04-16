@@ -9,19 +9,18 @@
 #include <sstream>
 
 #include "context.h"
-#include "vector.h"
-
-#include "simulation.h"
-#include "renderer.h"
-#include "camera.h"
 #include "mesh.h"
+#include "vector.h"
+#include "camera.h"
+#include "renderer.h"
+#include "simulation.h"
 
 objects::InputContext input;
 objects::TimingContext timing;
 
 objects::Camera *camera = new objects::Camera();
 objects::Simulation *simulation = new objects::Simulation();
-objects::Renderer *renderer = new objects::Renderer();
+objects::Renderer *renderer = new objects::OpenGLRenderer();
 
 // Initializes OpenGL and initiates further initialization.
 void Init() {
@@ -63,7 +62,7 @@ void Display() {
       at(0), at(1), at(2),
       up(0), up(1), up(2));
 
-  renderer->Render(*simulation);
+  //renderer->Render(*simulation);
 
   glutSwapBuffers();
 }
