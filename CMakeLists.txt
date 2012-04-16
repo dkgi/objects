@@ -8,8 +8,12 @@ find_package(OpenGL)
 find_package(GLUT)
 find_package(Boost)
 
-add_executable(objects config.h main.cc context.h camera.h object.h mesh.h
-    mesh.cc  simulation.h renderer.h vector.h matrix.h)
+#include_directories(geometry graphics)
+
+add_executable(objects config.h main.cc object.h object.cc simulation.h 
+    context.h camera.h renderer.h renderer.cc
+    shape.h shape.cc mesh.h mesh.cc 
+    vector.h matrix.h)
 target_link_libraries(objects ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${GLU_LIBRARIES} ${BOOST_LIBRARIES})
 
 include_directories(${CMAKE_SOURCE_DIR})

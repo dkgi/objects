@@ -1,5 +1,9 @@
-1. Parse obj and scene file
-2. Circular camera
-2. Comment code
-2. Debug overlay information
+1. Includes and file organization
+1. Doxygen
+1. Error handling
+1. Mesh -> Shape
+1. Refactoring
+1. Renderer as strategy pattern
 2. Readme
+3. Circular camera
+3. Debug overlay information
