@@ -1,4 +1,3 @@
-// TODO
 #ifndef OBJECTS_CAMERA_H_
 #define OBJECTS_CAMERA_H_
 
@@ -8,6 +7,9 @@
 
 namespace objects {
 
+/**
+  * TODO
+  */
 class Camera {
  public:
   // Default constructor places the camera at (0, 0, -5) facing down along the

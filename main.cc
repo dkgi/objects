@@ -8,6 +8,7 @@
 #include <cassert>
 #include <sstream>
 
+#include "parser.h"
 #include "context.h"
 #include "mesh.h"
 #include "vector.h"
@@ -31,8 +32,8 @@ void Init() {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  objects::MeshParser meshes;
-  meshes.Parse("meshes/cone.obj", "cone");
+  objects::ObjectParser object_parser;
+  object_parser.Parse(std::string("objects/cone.objd"));
 }
 
 // Computes time since last invocation, then advances both camera and the

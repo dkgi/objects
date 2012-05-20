@@ -1,4 +1,3 @@
-// TODO
 #ifndef OBJECTS_SIMULATION_H_
 #define OBJECTS_SIMULATION_H_
 

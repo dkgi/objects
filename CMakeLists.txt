@@ -10,7 +10,8 @@ find_package(Boost)
 
 #include_directories(geometry graphics)
 
-add_executable(objects config.h main.cc object.h object.cc simulation.h 
+add_executable(objects config.h main.cc object.h object.cc simulation.h
+    parser.h parser.cc
     context.h camera.h renderer.h renderer.cc
     shape.h shape.cc mesh.h mesh.cc 
     vector.h matrix.h)

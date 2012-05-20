@@ -1,6 +1,5 @@
-// TODO
-#ifndef OBJECTS_GEOMETRY_SHAPE_H_
-#define OBJECTS_GEOMETRY_SHAPE_H_
+#ifndef OBJECTS_SHAPE_H_
+#define OBJECTS_SHAPE_H_
 
 #include <map>
 #include <vector>
@@ -52,4 +51,4 @@ class Shape {
 
 }
 
-#endif // OBJECTS_GEOMETRY_SHAPE_H_
+#endif // OBJECTS_SHAPE_H_

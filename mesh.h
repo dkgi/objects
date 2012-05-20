@@ -1,4 +1,3 @@
-// TODO
 #ifndef OBJECTS_MESH_H_
 #define OBJECTS_MESH_H_
 
@@ -13,31 +12,56 @@
 
 namespace objects {
 
-// The Mesh class represents a mesh consisting of vertices, normals, texture
-// coordinates and faces relating vertices.
+/**
+  * The Mesh class represents a mesh consisting of vertices, normals, texture 
+  * coordinates and faces relating vertices.
+  */
 class Mesh : public Shape {
  public:
-  // Constructs a new mesh from vertices, normals, texture coordinates, faces
-  // and a bounding box.
+  /**
+    * The basic constructor.
+    * @param vertices The meshes' vertices.
+    * @param normals The meshes' normals corresponding to the vertices.
+    * @param texture_coordinates The texture coordinates corresponding to the
+    * vertices.
+    * @param faces The faces represented by the indices of vertices that form
+    * the given face.
+    * @param box The bounding box of the mesh.
+    */
   Mesh(const std::vector<Vector> &vertices, 
        const std::vector<Vector> &normals,
        const std::vector<Vector> &texture_coordinates, 
        const std::vector<std::vector<std::vector<int> > > &faces, 
        const Box &box);
 
-  // Renders the mesh.
-  void Render(const Renderer &renderer) const;
+  /**
+    * Renders the mesh.
+    * @param renderer The renderer.
+    */
+  void Render(Renderer &renderer) const;
 
-  // Returns the vertices.
+  /**
+    * The meshes' vertices.
+    * @return The list of vertices.
+    */
   const std::vector<Vector>& vertices() const;
 
-  // Returns the normals.
+  /**
+    * The meshes' normals.
+    * @return The list of normals.
+    */
   const std::vector<Vector>& normals() const;
 
-  // Returns the texture coordinates.
+  /**
+    * The meshes' texture coordinates.
+    * @return The list of texture coordinates.
+    */
   const std::vector<Vector>& texture_coordinates() const;
 
-  // Returns the faces.
+  /**
+    * The meshes' faces.
+    * @return The list of lists of indices to vertices forming the faces.
+    */
   const std::vector<std::vector<std::vector<int> > >& faces() const;
 
 private:
@@ -48,34 +72,6 @@ private:
 
   DISALLOW_COPY_AND_ASSIGN(Mesh);
 };
-
-
-// The MeshParser class manages a collection of meshes that and provides facilities
-// to parse meshes from files.
-class MeshParser {
- public:
-  // Create an empty collection of meshes.
-  MeshParser() {}
-
-  // Make sure all the meshes are deallocated.
-  ~MeshParser();
-
-  // Returns a pointer to the mesh that what parsed from the file with the given
-  // path or NULL if no such mesh exists.
-  Mesh* operator()(std::string path);
-
-  // Parse a mesh from an obj file and store it with for the given id.
-  Mesh* Parse(const std::string &filename, const std::string &id);
-
- private:
-  // Parse a single face.
-  void ParseFace(std::istream &in, std::vector<std::vector<int> > &f);
-
-  std::map<std::string, Mesh*> meshes_;     // The loaded meshes
-
-  DISALLOW_COPY_AND_ASSIGN(MeshParser);
-};
-
 
 }
 
