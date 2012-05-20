@@ -6,6 +6,7 @@
 #include "shape.h"
 #include "object.h"
 #include "mesh.h"
+#include "log.h"
 
 namespace objects {
 
@@ -37,12 +38,15 @@ ShapeParser::~ShapeParser() {
 }
 
 Shape* ShapeParser::Parse(const std::string &file) {
-  return ParseMesh(file);   // TODO support for different shapes.
+  // TODO support for different shapes
+  return ParseMesh(file);   
 }
 
 Mesh* ShapeParser::ParseMesh(const std::string &file) {
   // TODO proper error handling
   std::ifstream file_stream(file.c_str());
+  Log::info() << (file_stream.fail() ? "Cannot parse '" : "Parsing '") << file <<
+      "'" << std::endl;
 
   std::vector<Vector> vertices;
   std::vector<Vector> normals;
@@ -76,7 +80,7 @@ Mesh* ShapeParser::ParseMesh(const std::string &file) {
   Box box(ll - Vector::Epsilon(), ur + Vector::Epsilon());
   Mesh *mesh = new Mesh(vertices, normals, texture_coordinates, faces, box);
   shapes_[file] = mesh;
-  
+
   return mesh;
 }
 

@@ -34,6 +34,8 @@ void Init() {
 
   objects::ObjectParser object_parser;
   object_parser.Parse(std::string("objects/cone.objd"));
+
+  std::exit(0);
 }
 
 /** 

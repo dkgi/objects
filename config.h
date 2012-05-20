@@ -5,4 +5,5 @@
   TypeName(const TypeName &); \
   void operator=(const TypeName &);
 
+
 #endif // OBJECTS_CONFIG_H_
