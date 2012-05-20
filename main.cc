@@ -1,4 +1,3 @@
-// TODO
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/freeglut.h>
@@ -23,10 +22,11 @@ objects::Camera *camera = new objects::Camera();
 objects::Simulation *simulation = new objects::Simulation();
 objects::Renderer *renderer = new objects::OpenGLRenderer();
 
-// Initializes OpenGL and initiates further initialization.
+/** 
+  * Initializes OpenGL and initiates further initialization.
+  */
 void Init() {
   std::cout << std::fixed << std::setprecision(2);
-  glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_LIGHTING);
@@ -36,8 +36,10 @@ void Init() {
   object_parser.Parse(std::string("objects/cone.objd"));
 }
 
-// Computes time since last invocation, then advances both camera and the
-// simulation before initiating a new render cycle.
+/** 
+  * Computes time since last invocation, then advances both camera and the
+  * simulation before initiating a new render cycle.
+  */
 void Idle() {
   timing.now = glutGet(GLUT_ELAPSED_TIME);
   timing.dt = (timing.now - timing.then) / 1000.0f;
@@ -50,7 +52,9 @@ void Idle() {
   glutPostRedisplay();
 }
 
-// Renders the whole scene.
+/**
+  * Renders the whole scene.
+  */
 void Display() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -68,8 +72,10 @@ void Display() {
   glutSwapBuffers();
 }
 
-// Adjusts viewport, projection matrix and informs the camera about the new
-// size.
+/**
+  * Adjusts viewport, projection matrix and informs the camera about the new
+  * size.
+  */
 void Reshape(int w, int h) {
   camera->Reshape(w, h);
   glViewport(0, 0, w, h);
@@ -79,7 +85,9 @@ void Reshape(int w, int h) {
   glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
 
-// Updates the input context to keep track of the pressed key.
+/**
+  * Updates the input context to keep track of the pressed key.
+  */
 void Keyboard(unsigned char key, int x, int y) {
   input.keyDown[key] = true;
 
@@ -93,13 +101,17 @@ void Keyboard(unsigned char key, int x, int y) {
   }
 }
 
-// Updates the input context to keep track of the release key.
+/**
+  * Updates the input context to keep track of the release key.
+  */
 void KeyboardUp(unsigned char key, int x, int y) {
   input.keyDown[key] = false;
 }
 
-// Updates the input context to keep track of the mouse movement. The function
-// resets the mouse pointer to make sure that it can be moved indefinitely.
+/** 
+  * Updates the input context to keep track of the mouse movement. The function
+  * resets the mouse pointer to make sure that it can be moved indefinitely.
+  */
 void PassiveMotion(int x, int y) {
   input.dx = objects::Point(x, y) - input.defaultPosition;
   input.position += input.dx;
@@ -107,8 +119,10 @@ void PassiveMotion(int x, int y) {
   glutWarpPointer(input.defaultPosition(0), input.defaultPosition(1));
 }
 
-// The main function initializes glut, sets the different callback functions,
-// calls Init() and starts the main loop.
+/** 
+  * The main function initializes glut, sets the different callback functions,
+  * calls Init() and starts the main loop.
+  */
 int main(int argc, char *argv[]) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);

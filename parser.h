@@ -39,11 +39,18 @@ class ObjectParser {
   Object* operator()(const std::string &file) const;
   
   /**
-    * Parses an object from a file. The upon success the object will be
-    * available using the () operator.
+    * Parses an object from a file. Upon success the object will be available
+    * using the () operator.
     * @return The parsed object.
     */
   Object* Parse(const std::string &file);
+
+  /**
+    * Parses all objects in the a given directory. Upon success the objects will
+    * be available using the () operator.
+    * @return The list of parsed objects.
+    */
+  std::vector<Object*> ParseAll(const std::string &directory);
  private:
   std::map<std::string, Object*> objects_;  /** The parsed objects. */
 

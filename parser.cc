@@ -16,14 +16,18 @@ ObjectParser::~ObjectParser() {
 }
 
 Object* ObjectParser::operator()(const std::string &file) const {
-  // auto it = objects_.find(file);
-  // TODO implement
-  return nullptr;
+  auto it = objects_.find(file);
+  return (it != objects_.end()) ? nullptr : it->second;
 }
 
 Object* ObjectParser::Parse(const std::string &file) {
   // TODO implement.
   return nullptr;
+}
+
+std::vector<Object*> ObjectParser::ParseAll(const std::string &directory) {
+  // TODO implement.
+  return std::vector<Object*>();
 }
 
 ShapeParser::ShapeParser() {}
