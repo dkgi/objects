@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 
 #include "renderer.h"
+#include "object.h"
 #include "mesh.h"
 #include "shape.h"
 
@@ -9,6 +10,9 @@ namespace objects {
 
 OpenGLRenderer::OpenGLRenderer() {}
 
+void OpenGLRenderer::Render(const std::vector<Object*> &objects) {
+  std::cout << "render objects" << std::endl;
+}
 
 void OpenGLRenderer::Render(const Shape &shape) {
   std::cout << "render shape" << std::endl;

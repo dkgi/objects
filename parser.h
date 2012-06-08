@@ -59,7 +59,8 @@ class ShapeParser {
     */
   void ParseFace(std::istream &in, std::vector<std::vector<int> > &f);
 
-  std::map<std::string, Shape*> shapes_;  /** The parsed shapes. */
+  std::map<std::string, Shape*> shape_map_;   /** The map of parsed shapes. */
+  std::vector<Shape*> shapes_;                /** The parsed shapes. */
 
   DISALLOW_COPY_AND_ASSIGN(ShapeParser);
 };
@@ -101,11 +102,13 @@ class ObjectParser {
   /**
     * Parses all objects in the a given directory. Upon success the objects will
     * be available using the () operator.
-    * @return The list of parsed objects.
     */
-  std::vector<Object*> ParseAll(const std::string &directory);
+  void ParseAll(const std::string &directory);
+
+  const std::vector<Object*> &Objects() const;
  private:
-  std::map<std::string, Object*> objects_;      /** The parsed objects. */
+  std::map<std::string, Object*> object_map_;   /** The map of parsed objects. */
+  std::vector<Object*> objects_;                /** The parsed objects. */
   std::unique_ptr<ShapeParser> shape_parser_;   /** The parsed shapes. */
 
   DISALLOW_COPY_AND_ASSIGN(ObjectParser);

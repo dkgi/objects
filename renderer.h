@@ -1,18 +1,25 @@
-// TODO
 #ifndef OBJECTS_RENDERER_H_
 #define OBJECTS_RENDERER_H_
+
+#include <vector>
 
 #include "config.h"
 
 namespace objects {
 
+class Object;
 class Shape;
 class Mesh;
 class Box;
 
+/**
+  * TODO
+  */
 class Renderer {
  public:
   Renderer() {}
+
+  virtual void Render(const std::vector<Object*> &objects) = 0;
 
   virtual void Render(const Shape &shape) = 0;
 
@@ -30,6 +37,8 @@ class OpenGLRenderer : public Renderer {
  public:
   // Constructs an new renderer.
   OpenGLRenderer();
+
+  void Render(const std::vector<Object*> &objects);
 
   void Render(const Shape &shape);
 

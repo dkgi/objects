@@ -10,7 +10,8 @@ find_package(GLUT)
 find_package(Boost 1.41 COMPONENTS system filesystem REQUIRED)
 
 add_executable(objects 
-		config.h main.cc object.h object.cc simulation.h
+		config.h main.cc object.h object.cc 
+    simulation.h simulation.cc
     parser.h parser.cc log.h
     context.h camera.h renderer.h renderer.cc
     shape.h shape.cc mesh.h mesh.cc 

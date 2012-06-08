@@ -2,27 +2,38 @@
 #define OBJECTS_SIMULATION_H_
 
 #include <vector>
-#include <algorithm>
 
 #include "config.h"
-#include "context.h"
-#include "object.h"
+#include "vector.h"
 
 namespace objects {
 
-// This class specifies the physical behavior of the objects of the simulation.
+class TimingContext;
+class Object;
+
+/**
+  * The Simulation class is responsible for running the simulation.
+  */
 class Simulation {
  public:
-  // Constructs an empty simulation.
-  Simulation() {}
+  /**
+    * The basic constructor.
+    */
+  Simulation();
 
-  // Advances the simulation a single step.
-  void Step(const TimingContext &timing) {
-  }
+  /**
+    * The basic deconstructor.
+    */
+  ~Simulation();
+
+  /**
+    * Advaces the simulation by one step for the given timing information.
+    * @param timing The timing context
+    */
+  void Step(std::vector<Object*> &objects, const TimingContext &timing);
 
  private:
-  std::vector<Object*> objects_;    // The objects of the simulation
-  std::vector<Vector*> forces_;     // All external forces
+  std::vector<Vector*> forces_;     /** All external forces */
 
   DISALLOW_COPY_AND_ASSIGN(Simulation);
 };

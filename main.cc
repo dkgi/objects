@@ -22,6 +22,9 @@ objects::Camera *camera = new objects::Camera();
 objects::Simulation *simulation = new objects::Simulation();
 objects::Renderer *renderer = new objects::OpenGLRenderer();
 
+objects::ObjectParser *parser = new objects::ObjectParser();
+std::vector<objects::Object*> simulation_objects;
+
 /** 
   * Initializes OpenGL and initiates further initialization.
   */
@@ -32,10 +35,8 @@ void Init() {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  objects::ObjectParser object_parser;
-  object_parser.ParseAll(std::string("objects"));
-
-  std::exit(0);
+  parser->ParseAll("objects");
+  simulation_objects = parser->Objects();
 }
 
 /** 
@@ -49,7 +50,7 @@ void Idle() {
   timing.then = timing.now;
 
   camera->Step(timing, input);
-  simulation->Step(timing);
+  simulation->Step(simulation_objects, timing);
 
   glutPostRedisplay();
 }
@@ -69,7 +70,7 @@ void Display() {
       at(0), at(1), at(2),
       up(0), up(1), up(2));
 
-  //renderer->Render(*simulation);
+  renderer->Render(simulation_objects);
 
   glutSwapBuffers();
 }

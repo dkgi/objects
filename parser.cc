@@ -15,12 +15,12 @@ namespace objects {
 ShapeParser::ShapeParser() {}
 
 ShapeParser::~ShapeParser() {
-  for (auto pair : shapes_) delete pair.second;
+  for (auto shape : shapes_) delete shape;
 }
 
 Shape* ShapeParser::operator()(const std::string &file) const {
-  auto it = shapes_.find(file);
-  return (it != shapes_.end()) ? nullptr : it->second;
+  auto it = shape_map_.find(file);
+  return (it != shape_map_.end()) ? nullptr : it->second;
 }
 
 Shape* ShapeParser::Parse(const std::string &file) {
@@ -65,7 +65,8 @@ Mesh* ShapeParser::ParseMesh(const std::string &file) {
 
   Box box(ll - Vector::Epsilon(), ur + Vector::Epsilon());
   Mesh *mesh = new Mesh(vertices, normals, texture_coordinates, faces, box);
-  shapes_[file] = mesh;
+  shape_map_[file] = mesh;
+  shapes_.push_back(mesh);
 
   return mesh;
 }
@@ -100,12 +101,12 @@ void ShapeParser::ParseFace(std::istream &in, std::vector<std::vector<int> > &f)
 ObjectParser::ObjectParser() : shape_parser_{new ShapeParser()} {}
 
 ObjectParser::~ObjectParser() {
-  for (auto pair : objects_) delete pair.second;
+  for (auto object : objects_) delete object;
 }
 
 Object* ObjectParser::operator()(const std::string &file) const {
-  auto it = objects_.find(file);
-  return (it != objects_.end()) ? nullptr : it->second;
+  auto it = object_map_.find(file);
+  return (it != object_map_.end()) ? nullptr : it->second;
 }
 
 Object* ObjectParser::Parse(const std::string &file) {
@@ -134,13 +135,13 @@ Object* ObjectParser::Parse(const std::string &file) {
   }
 
   Object *object = new Object(m, x, v, shape);
-  objects_[file] = object;
+  object_map_[file] = object;
+  objects_.push_back(object);
   
   return object;
 }
 
-std::vector<Object*> ObjectParser::ParseAll(const std::string &directory) {
-  std::vector<Object*> result;
+void ObjectParser::ParseAll(const std::string &directory) {
   DIR *dir = nullptr;
   struct dirent *ent = nullptr;
 
@@ -149,16 +150,17 @@ std::vector<Object*> ObjectParser::ParseAll(const std::string &directory) {
     while ((ent = readdir(dir)) != nullptr) {
       std::string entry(ent->d_name);
       if (entry.length() > 4 && entry.substr(entry.length()-4) == ".ode") {
-        Object *object = Parse(directory + "/" + entry);
-        if (object != nullptr) result.push_back(object);
+        Parse(directory + "/" + entry);
       }
     }
   } else {
     Log::info() << "Cannot open directory '" << directory << "'" <<
       std::endl;
   }
+}
 
-  return result;
+const std::vector<Object*> &ObjectParser::Objects() const {
+  return objects_;
 }
 
 }
