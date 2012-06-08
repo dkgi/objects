@@ -33,7 +33,7 @@ void Init() {
   glEnable(GL_LIGHT0);
 
   objects::ObjectParser object_parser;
-  object_parser.Parse(std::string("objects/cone.objd"));
+  object_parser.ParseAll(std::string("objects"));
 
   std::exit(0);
 }

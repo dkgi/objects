@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 
 #include "config.h"
 
@@ -11,52 +12,6 @@ namespace objects {
 class Shape;
 class Object;
 class Mesh;
-
-/**
-  * The ObjectParser class provides basic facilities to parse objects from
-  * files. Furthermore it is responsible for managing the resources allocated
-  * after parsing. Objects parsed by a parser will only live as long as the
-  * parser lives itself.
-  */
-class ObjectParser {
- public:
-  /**
-    * The basic constructor.
-    */
-  ObjectParser();
-
-  /**
-    * The destructor. Upon deallocation of the parser all objects parsed by this
-    * parser will automatically be deallocated. 
-    */
-  ~ObjectParser();
-
-  /**
-    * The operator provides access to the previously parsed objects.
-    * @param file The file which the object was parsed from.
-    * @return The parsed object or nullptr if no such object exists.
-    */
-  Object* operator()(const std::string &file) const;
-  
-  /**
-    * Parses an object from a file. Upon success the object will be available
-    * using the () operator.
-    * @return The parsed object.
-    */
-  Object* Parse(const std::string &file);
-
-  /**
-    * Parses all objects in the a given directory. Upon success the objects will
-    * be available using the () operator.
-    * @return The list of parsed objects.
-    */
-  std::vector<Object*> ParseAll(const std::string &directory);
- private:
-  std::map<std::string, Object*> objects_;  /** The parsed objects. */
-
-  DISALLOW_COPY_AND_ASSIGN(ObjectParser);
-};
-
 
 /**
   * The ShapeParser class provides basic facilities to parse shapes from
@@ -107,6 +62,53 @@ class ShapeParser {
   std::map<std::string, Shape*> shapes_;  /** The parsed shapes. */
 
   DISALLOW_COPY_AND_ASSIGN(ShapeParser);
+};
+
+
+/**
+  * The ObjectParser class provides basic facilities to parse objects from
+  * files. Furthermore it is responsible for managing the resources allocated
+  * after parsing. Objects parsed by a parser will only live as long as the
+  * parser lives itself.
+  */
+class ObjectParser {
+ public:
+  /**
+    * The basic constructor.
+    */
+  ObjectParser();
+
+  /**
+    * The destructor. Upon deallocation of the parser all objects parsed by this
+    * parser will automatically be deallocated. 
+    */
+  ~ObjectParser();
+
+  /**
+    * The operator provides access to the previously parsed objects.
+    * @param file The file which the object was parsed from.
+    * @return The parsed object or nullptr if no such object exists.
+    */
+  Object* operator()(const std::string &file) const;
+  
+  /**
+    * Parses an object from a file. Upon success the object will be available
+    * using the () operator.
+    * @return The parsed object.
+    */
+  Object* Parse(const std::string &file);
+
+  /**
+    * Parses all objects in the a given directory. Upon success the objects will
+    * be available using the () operator.
+    * @return The list of parsed objects.
+    */
+  std::vector<Object*> ParseAll(const std::string &directory);
+ private:
+  std::map<std::string, Object*> objects_;      /** The parsed objects. */
+  std::unique_ptr<ShapeParser> shape_parser_;   /** The parsed shapes. */
+
+  DISALLOW_COPY_AND_ASSIGN(ObjectParser);
 };
 
 }

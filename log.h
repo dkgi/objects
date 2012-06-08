@@ -20,6 +20,10 @@ class Log {
     return std::cout << "DEBUG: ";
   }
 
+  static std::ostream& error() {
+    return std::cout << "ERROR: ";
+  }
+
  private:
   Log() {}
   virtual ~Log() {}

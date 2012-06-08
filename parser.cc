@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <dirent.h>
+#include <exception>
 #include <fstream>
 #include <sstream>
 
@@ -10,31 +12,15 @@
 
 namespace objects {
 
-ObjectParser::ObjectParser() {}
-
-ObjectParser::~ObjectParser() {
-  for (auto pair : objects_) delete pair.second;
-}
-
-Object* ObjectParser::operator()(const std::string &file) const {
-  auto it = objects_.find(file);
-  return (it != objects_.end()) ? nullptr : it->second;
-}
-
-Object* ObjectParser::Parse(const std::string &file) {
-  // TODO implement.
-  return nullptr;
-}
-
-std::vector<Object*> ObjectParser::ParseAll(const std::string &directory) {
-  // TODO implement.
-  return std::vector<Object*>();
-}
-
 ShapeParser::ShapeParser() {}
 
 ShapeParser::~ShapeParser() {
   for (auto pair : shapes_) delete pair.second;
+}
+
+Shape* ShapeParser::operator()(const std::string &file) const {
+  auto it = shapes_.find(file);
+  return (it != shapes_.end()) ? nullptr : it->second;
 }
 
 Shape* ShapeParser::Parse(const std::string &file) {
@@ -43,7 +29,6 @@ Shape* ShapeParser::Parse(const std::string &file) {
 }
 
 Mesh* ShapeParser::ParseMesh(const std::string &file) {
-  // TODO proper error handling
   std::ifstream file_stream(file.c_str());
   Log::info() << (file_stream.fail() ? "Cannot parse '" : "Parsing '") << file <<
       "'" << std::endl;
@@ -61,6 +46,7 @@ Mesh* ShapeParser::ParseMesh(const std::string &file) {
   while (std::getline(file_stream, line)) {
     std::stringstream line_stream(line);
     line_stream >> str;
+
     if (str == std::string("v") && line_stream >> v) {
       vertices.push_back(v);
       if (v <= ll) ll = v;
@@ -109,6 +95,70 @@ void ShapeParser::ParseFace(std::istream &in, std::vector<std::vector<int> > &f)
       break;
     }
   }
+}
+
+ObjectParser::ObjectParser() : shape_parser_{new ShapeParser()} {}
+
+ObjectParser::~ObjectParser() {
+  for (auto pair : objects_) delete pair.second;
+}
+
+Object* ObjectParser::operator()(const std::string &file) const {
+  auto it = objects_.find(file);
+  return (it != objects_.end()) ? nullptr : it->second;
+}
+
+Object* ObjectParser::Parse(const std::string &file) {
+  std::ifstream file_stream(file.c_str());
+  Log::info() << (file_stream.fail() ? "Cannot parse '" : "Parsing '") << file <<
+      "'" << std::endl;
+
+  std::string line, str;
+  std::string name, mesh_file;
+  Vector x, v;
+  Shape *shape = nullptr;
+  float m;
+
+  while (std::getline(file_stream, line)) {
+    std::stringstream line_stream(line);
+    line_stream >> str;
+
+    if (str == std::string("o") && line_stream >> name) {}
+    if (str == std::string("f") && line_stream >> mesh_file) {
+      shape = (*shape_parser_)(mesh_file);
+      if (shape == nullptr) shape = (*shape_parser_).Parse(mesh_file);
+    }
+    if (str == std::string("m") && line_stream >> m) {}
+    if (str == std::string("x") && line_stream >> x) {}
+    if (str == std::string("v") && line_stream >> v) {}
+  }
+
+  Object *object = new Object(m, x, v, shape);
+  objects_[file] = object;
+  
+  return object;
+}
+
+std::vector<Object*> ObjectParser::ParseAll(const std::string &directory) {
+  std::vector<Object*> result;
+  DIR *dir = nullptr;
+  struct dirent *ent = nullptr;
+
+  dir = opendir(directory.c_str());
+  if (dir != nullptr) {
+    while ((ent = readdir(dir)) != nullptr) {
+      std::string entry(ent->d_name);
+      if (entry.length() > 4 && entry.substr(entry.length()-4) == ".ode") {
+        Object *object = Parse(directory + "/" + entry);
+        if (object != nullptr) result.push_back(object);
+      }
+    }
+  } else {
+    Log::info() << "Cannot open directory '" << directory << "'" <<
+      std::endl;
+  }
+
+  return result;
 }
 
 }
